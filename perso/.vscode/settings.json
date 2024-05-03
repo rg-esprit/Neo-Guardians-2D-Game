@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "sdl_image.h": "c",
+        "sdl.h": "c",
+        "sdl_mixer.h": "c",
+        "unistd.h": "c",
+        "stdio.h": "c",
+        "serial_comm.h": "c",
+        "libserialport.h": "c",
+        "pthread.h": "c",
+        "perso.h": "c",
+        "sdl_ttf.h": "c"
+    }
+}
