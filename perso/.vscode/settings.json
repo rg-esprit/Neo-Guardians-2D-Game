@@ -9,6 +9,7 @@
         "libserialport.h": "c",
         "pthread.h": "c",
         "perso.h": "c",
-        "sdl_ttf.h": "c"
+        "sdl_ttf.h": "c",
+        "functional": "c"
     }
 }

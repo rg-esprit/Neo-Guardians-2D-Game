@@ -21,6 +21,7 @@ typedef struct {
 
 void init(Personne *p, int numperso);
 void initPerso(Personne *p);
+void swapCharacter(Personne *p);
 void afficherPerso(Personne p, SDL_Surface *screen);
 void movePerso(Personne *p);
 void saut_Personnage(Personne *p, int posy_absolu);

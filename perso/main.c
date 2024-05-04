@@ -20,11 +20,47 @@ void init(Personne *p, int numperso){
     p->nb_vie = 3;
 }
 
+void swapCharacter(Personne *p) {
+    libererPerso(p);
+
+    if (p->x == 0) {
+        p->x = 1;
+        p->vitesse = 9;  
+        p->pes[0] = IMG_Load("img2/jump/jump.png");
+        p->pes[1] = IMG_Load("img2/jump/Ljump.png");
+        p->pes[2] = IMG_Load("img2/run/Run1.png");
+        p->pes[3] = IMG_Load("img2/run/Run2.png");
+        p->pes[4] = IMG_Load("img2/run/LRun1.png");
+        p->pes[5] = IMG_Load("img2/run/LRun2.png");
+        p->pes[6] = IMG_Load("img2/Perso.png");
+        p->pes[7] = IMG_Load("img2/LPerso.png");
+    } else {
+        p->x = 0;
+        p->vitesse = 5;  
+        p->pes[0] = IMG_Load("img/jump/jump.png");
+        p->pes[1] = IMG_Load("img/jump/Ljump.png");
+        p->pes[2] = IMG_Load("img/run/Run1.png");
+        p->pes[3] = IMG_Load("img/run/Run2.png");
+        p->pes[4] = IMG_Load("img/run/LRun1.png");
+        p->pes[5] = IMG_Load("img/run/LRun2.png");
+        p->pes[6] = IMG_Load("img/Perso.png");
+        p->pes[7] = IMG_Load("img/LPerso.png");
+    }
+
+    for (int i = 0; i < 8; i++) {
+        if (p->pes[i] == NULL) {
+            fprintf(stderr, "Unable to load image from set %d: %s\n", p->x, IMG_GetError());
+            return;
+        }
+    }
+}
+
+
 void initPerso(Personne *p) {
     p->up = 0;
     p->directions = 0;
     p->x = 0;
-    p->vitesse = 1;
+    p->vitesse = 5;
     p->acceleration = 0;
     p->position_x = 0.0;
     p->position_y = 450.0;
@@ -40,11 +76,11 @@ void initPerso(Personne *p) {
     p->pes[3] = IMG_Load("img/run/Run2.png");
     p->pes[4] = IMG_Load("img/run/LRun1.png");
     p->pes[5] = IMG_Load("img/run/LRun2.png");
-    p->pes[6] = IMG_Load("Perso.png");
-    p->pes[7] = IMG_Load("LPerso.png");
+    p->pes[6] = IMG_Load("img/Perso.png");
+    p->pes[7] = IMG_Load("img/LPerso.png");
 
     // Check if any image failed to load
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 8; i++) { 
         if (p->pes[i] == NULL) {
             fprintf(stderr, "Unable to load image: %s\n", IMG_GetError());
             // Handle error or exit the function
@@ -211,6 +247,9 @@ int main(int argc, char* argv[]) {
                                 printf("Jump now!\n");
                             }
                             break;
+                        case SDLK_s:
+                            swapCharacter(&p);
+                            break;
                     }
                     break;
                 case SDL_KEYUP:
@@ -248,26 +287,4 @@ int main(int argc, char* argv[]) {
     return 0;
 }
 
-// void process_serial_data(const char *data) {
-//     printf("Processing received data: %s\n", data);
-    
-//     // Parse the received data and update player directions
-//     if (strcmp(data, "LEFT_PRESS") == 0) {
-//         p.directions = 1;
-//         p.move_left = 1;
-//     } else if (strcmp(data, "LEFT_RELEASE") == 0) {
-//         p.move_left = 0;
-//     } else if (strcmp(data, "RIGHT_PRESS") == 0) {
-//         p.directions = 0;
-//         p.move_right = 1;
-//     } else if (strcmp(data, "RIGHT_RELEASE") == 0) {
-//         p.move_right = 0;
-//     } else if (strcmp(data, "UP_PRESS") == 0) {
-//         if (p.up == 0) {
-//             p.up = 1;
-//             printf("Jump now!\n");
-//         }
-//     } else if (strcmp(data, "UP_RELEASE") == 0) {
-//         // Handle UP release if needed
-//     }
-// }
+
