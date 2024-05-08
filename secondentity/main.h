@@ -1,3 +1,3 @@
-#include "entite_secondaire.h"
+#include "ennemi.h"
 #include "def.h"
-#include "entite.h"
+#include "bonus.h"

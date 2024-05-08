@@ -8,10 +8,11 @@ int main()
 {
 Ennemi e;
 entite en;
-SDL_Rect pos,posp;
+SDL_Rect pos,posp; 
 SDL_Surface *ecran,*bg,*perso;
 SDL_Event event;
 int bfin = 0;
+TTF_Init();
 if (SDL_Init(SDL_INIT_VIDEO ) < 0)
 	{
 		fprintf(stderr, "Echec d'initialisation de SDL.\n");
@@ -37,6 +38,7 @@ if (SDL_Init(SDL_INIT_VIDEO ) < 0)
 
   initEnnemi(&e);
   init_entite(&en);
+  int score=0;
 
   while (!bfin){
     //SDL_WaitEvent(&event);
@@ -51,20 +53,21 @@ if (SDL_Init(SDL_INIT_VIDEO ) < 0)
 				case SDL_KEYDOWN:
 					switch(event.key.keysym.sym)
 					{
+
+						case SDLK_ESCAPE:
+							bfin=1;
+							break;
 						case SDLK_UP:
-							posp.y=posp.y-1;
+							posp.y=posp.y-4;
 							break;
 						case SDLK_DOWN:
-							posp.y=posp.y+1;
+							posp.y=posp.y+4;
 							break;
 						case SDLK_RIGHT:
-							posp.x=posp.x+1;
-
-
+							posp.x=posp.x+4;
 							break;
-
 						case SDLK_LEFT:
-							posp.x=posp.x-1;
+							posp.x=posp.x-4;
 							break;
 					}
 
@@ -74,21 +77,27 @@ if (SDL_Init(SDL_INIT_VIDEO ) < 0)
 
 
     SDL_BlitSurface(bg, NULL, ecran, &pos);
-    deplacer(&e);
-		deplacerAI(&e,posp);
     afficherEnnemi(e,ecran);
-
-	afficher_entite(en,ecran);
-	animer_entite(&en);
-	mouvement_aleatoire_entite(&en);
-if (collisionTRI(en.pos,posp)) en.affichage=0;
+    move(&e);
+    moveAI(&e,posp);
+    afficher_entite(en,ecran);
+    animer_entite(&en);
+    afficher_score(score,ecran);
+	
+	
+if (collisionTRI(en.pos,posp)) {if(en.affichage==1) score+=3; en.affichage=0;}
 		SDL_BlitSurface(perso, NULL, ecran, &posp);
     SDL_Flip(ecran);
-		if (collision(perso,posp,e)==1){
-			bfin = 1 ;
+		if (collisionBB(perso,posp,e)==1){
+score--;
+	posp.x=0;
+	posp.y=150;
+  	
+
+if(score==0)bfin = 1 ;
 		}
 
-
+SDL_Delay(80); 
 
   }
 

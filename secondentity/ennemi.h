@@ -5,13 +5,13 @@ typedef struct Ennemi
   SDL_Rect position;
   int direction;
   int numIM;
-  int status;
+  int status; 
 
 }Ennemi;
 
 void initEnnemi(Ennemi *e);
 void afficherEnnemi (Ennemi e,SDL_Surface *ecran);
 void animerEnnemi (Ennemi *e);
-void deplacer(Ennemi *e);
-int collision (SDL_Surface *p,SDL_Rect posp,Ennemi e);
-void deplacerAI(Ennemi *e,SDL_Rect pos);
+void move(Ennemi *e);
+int collisionBB (SDL_Surface *p,SDL_Rect posp,Ennemi e); 
+void moveAI(Ennemi *e,SDL_Rect pos);
