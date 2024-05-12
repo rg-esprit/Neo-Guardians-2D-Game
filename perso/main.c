@@ -90,34 +90,55 @@ void initPerso(Personne *p) {
 }
 
 
-void afficherPerso(Personne p, SDL_Surface *screen) {
+void afficherPerso(Personne *p, SDL_Surface *screen) {
     SDL_Rect posecranimg;
-    posecranimg.x = p.position_x;
-    posecranimg.y = p.position_y;
+    posecranimg.x = p->position_x;
+    posecranimg.y = p->position_y;
 
     SDL_Surface *characterImage = NULL;
-    if (p.up != 0) {
-        if (p.directions == 0) {
-            characterImage = p.pes[0];
+
+    if (p->up != 0) {
+        // Handle jumping images
+        if (p->directions == 0) {
+            characterImage = p->pes[0];
         } else {
-            characterImage = p.pes[1];
+            characterImage = p->pes[1];
         }
-    } else {
-        if (p.move_left) {
-            characterImage = (p.directions == 0) ? p.pes[2] : p.pes[4];
-        } else if (p.move_right) {
-            characterImage = (p.directions == 0) ? p.pes[3] : p.pes[5];
+    } else if (p->move_left) {
+        int frameIndex = (p->frame / 30) % 2; // '5' can be adjusted to change animation speed
+        if (frameIndex == 0) {
+            characterImage = p->pes[5];
         } else {
-            if (p.directions == 0) {
-                characterImage = p.pes[6];
-            } else {
-                characterImage = p.pes[7];
-            }            
+            characterImage = p->pes[4];
+        }
+        p->frame++; // Increment frame count to advance animation
+    } else if (p->move_right) {
+        int frameIndex = (p->frame / 30) % 2; // '5' can be adjusted to change animation speed
+        if (frameIndex == 0) {
+            characterImage = p->pes[2];
+        } else {
+            characterImage = p->pes[3];
+        }
+        p->frame++;
+    } else {
+        // Handle static images when character is not moving
+        if (p->directions == 0) {
+            characterImage = p->pes[6];
+        } else {
+            characterImage = p->pes[7];
         }
     }
 
-    SDL_BlitSurface(characterImage, NULL, screen, &posecranimg);
+    // If a valid image is selected, blit it to the screen
+    if (characterImage != NULL) {
+        SDL_BlitSurface(characterImage, NULL, screen, &posecranimg);
+    } else {
+        // Log an error or handle cases where no valid image is found
+        fprintf(stderr, "No valid character image found for rendering.\n");
+    }
 }
+
+
 
 
 void libererPerso(Personne *p) {
@@ -183,7 +204,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    SDL_Surface *screen = SDL_SetVideoMode(800, 600, 32, SDL_SWSURFACE);
+    SDL_Surface *screen = SDL_SetVideoMode(1920, 1080, 32, SDL_SWSURFACE);
     if (screen == NULL) {
         fprintf(stderr, "Unable to set video mode: %s\n", SDL_GetError());
         SDL_Quit();
@@ -196,9 +217,10 @@ int main(int argc, char* argv[]) {
     struct sp_port *port;
     if (open_serial_port("/dev/ttyACM0", &port) != 0) {
         fprintf(stderr, "Failed to open serial port\n");
-        return 1;
+        return NULL; 
     }
 
+    printf("naamel fi thread\n");
     ThreadParams params;
     params.p = &p; // Assuming 'p' is initialized somewhere in your code
     params.port = port; // Assuming 'port' is initialized somewhere in your code
@@ -210,7 +232,6 @@ int main(int argc, char* argv[]) {
         close_serial_port(port);
         return 1;
     }
-
     // end code of arduino
     
 
@@ -244,7 +265,6 @@ int main(int argc, char* argv[]) {
                         case SDLK_UP:
                             if (p.up == 0) {
                                 p.up = 1;
-                                printf("Jump now!\n");
                             }
                             break;
                         case SDLK_s:
@@ -273,7 +293,7 @@ int main(int argc, char* argv[]) {
         }
 
         SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-        afficherPerso(p, screen);
+        afficherPerso(&p, screen);
         SDL_Flip(screen);
 
         frameTime = SDL_GetTicks() - frameStart;

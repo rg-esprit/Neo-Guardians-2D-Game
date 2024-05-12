@@ -3,9 +3,15 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 
-void handleMouseHover(SDL_Surface *screen, SDL_Surface *image, SDL_Surface *hoverImage, SDL_Rect pos, int mouseX, int mouseY, int *soundPlayed, Mix_Chunk *sound);
 
-int main(int argc, char** argv) {
+void handleMouseHover(SDL_Surface *screen, SDL_Surface *image, SDL_Surface *hoverImage, SDL_Rect pos, int mouseX, int mouseY, int *soundPlayed, Mix_Chunk *sound);
+void handleButtonClick(int mouseX, int mouseY, SDL_Rect pos_play, int play_w, int play_h,
+                       SDL_Rect pos_settings, int settings_w, int settings_h,
+                       SDL_Rect pos_exit, int exit_w, int exit_h, int* screen, SDL_Surface *background, SDL_Surface *ecran, int *choix);
+
+int runMenu() {
+
+    int choix = 0;
     SDL_Surface *ecran;
     SDL_Surface *background, *image_play, *image_settings, *image_exit, *image_play2, *image_settings2, *image_exit2, *new_game, *new_game2, *continuee, *continuee2, *home, *easy, *hard, *medium, *easy2, *hard2, *medium2, *up, *down;
 
@@ -29,30 +35,30 @@ int main(int argc, char** argv) {
     }
 
     // Load images and audio
-    background = IMG_Load("last.jpg");
-    image_play = IMG_Load("img/play.png");
-    image_play2 = IMG_Load("img/play_hover.png");
-    image_settings = IMG_Load("img/settings.png");
-    image_settings2 = IMG_Load("img/settings_hover.png");
-    image_exit = IMG_Load("img/exit.png");
-    image_exit2 = IMG_Load("img/exit_hover.png");
-    new_game = IMG_Load("img/new_game.png");
-    new_game2 = IMG_Load("img/new_game_hover.png");
-    continuee = IMG_Load("img/continue.png");
-    continuee2 = IMG_Load("img/continue_hover.png");
-    home = IMG_Load("img/home.png");
-    easy = IMG_Load("img/easy.png");
-    hard = IMG_Load("img/hard.png");
-    medium = IMG_Load("img/medium.png");
-    easy2 = IMG_Load("img/easy_hover.png");
-    hard2 = IMG_Load("img/hard_hover.png");
-    medium2 = IMG_Load("img/medium_hover.png");
-    up = IMG_Load("img/up.png");
-    down = IMG_Load("img/down.png");
+    background = IMG_Load("Menu/last.jpg");
+    image_play = IMG_Load("Menu/img/play.png");
+    image_play2 = IMG_Load("Menu/img/play_hover.png");
+    image_settings = IMG_Load("Menu/img/settings.png");
+    image_settings2 = IMG_Load("Menu/img/settings_hover.png");
+    image_exit = IMG_Load("Menu/img/exit.png");
+    image_exit2 = IMG_Load("Menu/img/exit_hover.png");
+    new_game = IMG_Load("Menu/img/new_game.png");
+    new_game2 = IMG_Load("Menu/img/new_game_hover.png");
+    continuee = IMG_Load("Menu/img/continue.png");
+    continuee2 = IMG_Load("Menu/img/continue_hover.png");
+    home = IMG_Load("Menu/img/home.png");
+    easy = IMG_Load("Menu/img/easy.png");
+    hard = IMG_Load("Menu/img/hard.png");
+    medium = IMG_Load("Menu/img/medium.png");
+    easy2 = IMG_Load("Menu/img/easy_hover.png");
+    hard2 = IMG_Load("Menu/img/hard_hover.png");
+    medium2 = IMG_Load("Menu/img/medium_hover.png");
+    up = IMG_Load("Menu/img/up.png");
+    down = IMG_Load("Menu/img/down.png");
 
-    font = TTF_OpenFont("arial.ttf", 20);
-    musique = Mix_LoadMUS("song.mp3");
-    soundEffect = Mix_LoadWAV("sound.wav");
+    font = TTF_OpenFont("Menu/arial.ttf", 20);
+    musique = Mix_LoadMUS("Menu/song.mp3");
+    soundEffect = Mix_LoadWAV("Menu/sound.wav");
 
     // Set initial positions
     pos_play.x = 900; pos_play.y = 150;
@@ -96,9 +102,11 @@ int main(int argc, char** argv) {
                                         pos_play, image_play->w, image_play->h,
                                         pos_settings, image_settings->w, image_settings->h,
                                         pos_exit, image_exit->w, image_exit->h,
-                                        &screen, background, ecran);
+                                        &screen, background, ecran, &choix);
                         if (screen == -1) {
                             running = 0; // Exit game if necessary
+                        } else if (choix != 0) {
+                            running = 0;
                         }
                     }
                     break;
@@ -123,7 +131,7 @@ int main(int argc, char** argv) {
     Mix_CloseAudio();
     TTF_Quit();
     SDL_Quit();
-    return 0;
+    return choix;
 }
 
 void handleMouseHover(SDL_Surface *screen, SDL_Surface *image, SDL_Surface *hoverImage, SDL_Rect pos, int mouseX, int mouseY, int *soundPlayed, Mix_Chunk *sound) {
@@ -142,7 +150,7 @@ void handleMouseHover(SDL_Surface *screen, SDL_Surface *image, SDL_Surface *hove
 
 void handleButtonClick(int mouseX, int mouseY, SDL_Rect pos_play, int play_w, int play_h,
                                           SDL_Rect pos_settings, int settings_w, int settings_h,
-                                          SDL_Rect pos_exit, int exit_w, int exit_h, int* screen, SDL_Surface *background, SDL_Surface *ecran) {
+                                          SDL_Rect pos_exit, int exit_w, int exit_h, int* screen, SDL_Surface *background, SDL_Surface *ecran, int *choix) {
     if (mouseX >= pos_play.x && mouseX <= pos_play.x + play_w &&
         mouseY >= pos_play.y && mouseY <= pos_play.y + play_h) {
         if (*screen == 0) {
@@ -151,12 +159,16 @@ void handleButtonClick(int mouseX, int mouseY, SDL_Rect pos_play, int play_w, in
             *screen = 2;
         }  else if (*screen == 2) {
             //*screen = 2;
+            *choix = 1;
         }
         SDL_BlitSurface(background, NULL, ecran, NULL);
     } else if (mouseX >= pos_settings.x && mouseX <= pos_settings.x + settings_w &&
                mouseY >= pos_settings.y && mouseY <= pos_settings.y + settings_h) {
         if (*screen == 0) {
             *screen = 3;  // Switch to settings screen
+        } else if (*screen == 2) {
+            //*screen = 2;
+            *choix = 2;
         }
         SDL_BlitSurface(background, NULL, ecran, NULL);
     } else if (mouseX >= pos_exit.x && mouseX <= pos_exit.x + exit_w &&
@@ -173,4 +185,3 @@ void handleButtonClick(int mouseX, int mouseY, SDL_Rect pos_play, int play_w, in
         SDL_BlitSurface(background, NULL, ecran, NULL);
     }
 }
-
