@@ -35,11 +35,11 @@ void initBack(background *b)
     }
 
 	b->calque_background=NULL;
-	b->calque_background=IMG_Load("masque.png");  
+	b->calque_background=IMG_Load("background/masque.png");  
 	b->afficher_background=NULL;
-	b->afficher_background=IMG_Load("map1.png");
+	b->afficher_background=IMG_Load("background/map1.png");
 	b->aff=NULL;
-	b->aff=IMG_Load("map.png");
+	b->aff=IMG_Load("background/map.png");
 	b->pos_background.x=0;
 	b->pos_background.y=0;
 	b->pos_background2.x=0;
