@@ -9,7 +9,7 @@
 void initialiser_evan(hero *evan) 
 {		
 		evan->afficher_hero[0]=NULL;
-		evan->afficher_hero[0]=IMG_Load("1.png");
+		evan->afficher_hero[0]=IMG_Load("background/1.png");
 		evan->pos_hero2.x=120;
 		evan->pos_hero2.y=675;
 		evan->farm=0;

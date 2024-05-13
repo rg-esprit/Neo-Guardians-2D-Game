@@ -11,7 +11,7 @@ typedef struct {
     double x, position_x, position_y, vitesse, acceleration, velocity_y;
     SDL_Surface *pes[20]; // Corrected from SDL_surface to SDL_Surface *
     int score, nb_vie, timing;
-    int move_left, move_right;
+    int move_left, move_right, frame;
 } Personne;
 
 typedef struct {
@@ -22,11 +22,12 @@ typedef struct {
 void init(Personne *p, int numperso);
 void initPerso(Personne *p);
 void swapCharacter(Personne *p);
-void afficherPerso(Personne p, SDL_Surface *screen);
+void afficherPerso(Personne *p, SDL_Surface *screen);
 void movePerso(Personne *p);
 void saut_Personnage(Personne *p, int posy_absolu);
 void libererPerso(Personne *p);
 void process_serial_data(const char *data);
+void swapCharacter(Personne *p);
 
 
 #endif
