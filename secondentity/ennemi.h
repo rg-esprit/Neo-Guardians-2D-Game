@@ -13,5 +13,5 @@ void initEnnemi(Ennemi *e);
 void afficherEnnemi (Ennemi e,SDL_Surface *ecran);
 void animerEnnemi (Ennemi *e);
 void move(Ennemi *e);
-int collisionBB (SDL_Surface *p,SDL_Rect posp,Ennemi e); 
+int collisionBB (SDL_Rect posp,Ennemi e); 
 void moveAI(Ennemi *e,SDL_Rect pos);

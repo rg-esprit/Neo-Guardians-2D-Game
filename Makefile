@@ -2,11 +2,11 @@
 CC=gcc
 
 # Define compiler flags, include directories for your headers
-CFLAGS=-g -Wall -I$(CURDIR)/Menu -I$(CURDIR)/perso -I$(CURDIR)/background -I$(CURDIR)/minimap
+CFLAGS=-g -Wall -I$(CURDIR)/Menu -I$(CURDIR)/perso -I$(CURDIR)/background -I$(CURDIR)/minimap -I$(CURDIR)/secondentity
 
 
 # Define linker flags, include libraries needed (SDL, pthread, and serialport)
-LDFLAGS=-lSDL -lSDL_ttf -lSDL_image -lSDL_mixer -lpthread -lserialport
+LDFLAGS=-lSDL -lSDL_ttf -lSDL_image -lSDL_mixer -lpthread -lserialport -lm
 
 # Define the executable output file
 EXEC=prog
@@ -20,6 +20,8 @@ OBJS=main.o \
      background/collisionPP.o \
      background/evan.o \
      background/mouvment.o \
+	 secondentity/bonus.o \
+	 secondentity/ennemi.o \
 	 minimap/minimap.o \
      background/scrolling.o
 
@@ -60,6 +62,12 @@ background/scrolling.o: background/scrolling.c background/header.h
 
 minimap/minimap.o: minimap/minimap.c minimap/minimap.h
 	$(CC) $(CFLAGS) -c minimap/minimap.c -o minimap/minimap.o
+
+secondentity/ennemi.o: secondentity/ennemi.c secondentity/ennemi.h
+	$(CC) $(CFLAGS) -c secondentity/ennemi.c -o secondentity/ennemi.o
+
+secondentity/bonus.o: secondentity/bonus.c secondentity/bonus.h
+	$(CC) $(CFLAGS) -c secondentity/bonus.c -o secondentity/bonus.o
 
 # Clean rule to clean up object files and the executable
 clean:

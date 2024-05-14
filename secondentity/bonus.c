@@ -11,7 +11,7 @@ void init_entite(entite * p)
   ( * p).sprite.y = 0;
   ( * p).sprite_n = 0;
   ( * p).speed = 1;
-  ( * p).image = IMG_Load("mini-coin.png");
+  ( * p).image = IMG_Load("secondentity/mini-coin.png");
   ( * p).pos.w = ( * p).image -> w/6;
   ( * p).pos.h = ( * p).image -> h;
   ( * p).sprite.w = ( * p).image -> w/6;

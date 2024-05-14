@@ -4,7 +4,7 @@
 
 void initEnnemi(Ennemi *e){
   int i ;
-  char ch[100]= "ennemi/";
+  char ch[100]= "secondentity/ennemi/";
   char n [3],ch1[100];
   for(i=0;i<12;i++){
     strcpy (ch1,"");
@@ -20,8 +20,8 @@ void initEnnemi(Ennemi *e){
     {
       printf("Unable to load Ennemi %s\n" , IMG_GetError());
     }
-    e->position.x =300;
-    e->position.y =170;
+    e->position.x =650;
+    e->position.y =700;
     e->direction = 0;
 
     e->numIM = 0;
@@ -43,8 +43,8 @@ void afficherEnnemi (Ennemi e,SDL_Surface *ecran){
 
 ////////////////////////////////
 void animerEnnemi (Ennemi *e){
-if(e->numIM%2==1) e->position.y=170;
-else e->position.y=160;
+if(e->numIM%2==1) e->position.y=700;
+else e->position.y=790;
   if(e->direction==0 && e->status ==0){ 
     e->numIM++;
     if (e->numIM>2) e->numIM=0;
@@ -99,11 +99,11 @@ void move(Ennemi *e){
 
 }
 /////////////////////////////////////////
-int collisionBB (SDL_Surface *p,SDL_Rect posp,Ennemi e){
-  if ((((posp.x+p->w) >= e.position.x)) && ((posp.x+p->w) <= (e.position.x+e.image[e.numIM]->w))&&((posp.y+p->h)>=e.position.y)){
+int collisionBB (SDL_Rect posp,Ennemi e){
+  if ((((posp.x+164) >= e.position.x)) && ((posp.x+164) <= (e.position.x+e.image[e.numIM]->w))&&((posp.y+256)>=e.position.y)){
     return 1;
   }
-  if (((posp.x >= e.position.x)) && (posp.x <= (e.position.x+e.image[e.numIM]->w))&&((posp.y+p->h)>=e.position.y)){
+  if (((posp.x >= e.position.x)) && (posp.x <= (e.position.x+e.image[e.numIM]->w))&&((posp.y+256)>=e.position.y)){
     return 1;
   }
 
@@ -116,7 +116,7 @@ void moveAI(Ennemi *e,SDL_Rect pos){
     e->direction = 1;//gauche
     e->numIM =9;
     e->position.x=e->position.x-4;
-    animerEnnemi(e);c
+    animerEnnemi(e);
   }
   if ((e->position.x-pos.x)<300&&e->status ==0 &&e->position.x>pos.x){
     e->status = 0;

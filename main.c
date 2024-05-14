@@ -9,6 +9,8 @@
 #include "background/header.h"
 #include "perso/serial_comm.h"
 #include "minimap/minimap.h"
+#include "secondentity/ennemi.h"
+#include "secondentity/bonus.h"
 
 int main() {
     int choix = runMenu();
@@ -32,6 +34,12 @@ int main() {
         int resize=20;
         minimap minimap;
         init_minimap(&minimap);
+        Ennemi enn;
+        entite en;
+        SDL_Rect posp;
+        initEnnemi(&enn);
+        //init_entite(&en);
+        int score=0;
         // arduino
         struct sp_port *port;
         if (open_serial_port("/dev/ttyACM0", &port) != 0) {
@@ -122,7 +130,26 @@ int main() {
             afficherPerso(&p, screen);
             MAJMinimap(&p, &minimap, resize, p.directions);
             blit_minimap(minimap,screen);
+            posp.x=p.position_x;
+	        posp.y=p.position_y;
+            afficherEnnemi(enn,screen);
+            move(&enn);
+            moveAI(&enn,posp);
+            afficher_entite(en,screen);
+            animer_entite(&en);
+            afficher_score(score,screen);
+            if (collisionTRI(en.pos,posp)) {if(en.affichage==1) score+=3; en.affichage=0;}
             SDL_Flip(screen);
+            if (collisionBB(posp, enn) == 1) {
+                score--;
+                posp.x = 0;
+                posp.y = 150;
+
+                if (score == 0)
+                    gameRunning = 0;
+                    printf("lost.");
+            }
+
 
             frameTime = SDL_GetTicks() - frameStart;
             if (frameDelay > frameTime) {
