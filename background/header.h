@@ -6,6 +6,7 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
+#include "/home/rg/Desktop/Neo-Guardians/perso/perso.h"
 
 
 typedef struct hero
@@ -30,6 +31,9 @@ typedef struct background{
 	SDL_Surface *owl[14];
 	SDL_Rect port;
 	SDL_Rect owll;
+	int nbVie;
+	SDL_Surface *heart;
+	SDL_Rect rectheart;
 }background;
 
  
@@ -38,9 +42,9 @@ typedef struct background{
 	void initialiser_evan(hero *evan);
 	void afficher_evan(hero evan,SDL_Surface *ecran);
 	void animerBackground (background *b,SDL_Surface *ecran);
-	void scrolling (hero *evan,background *b, int co);
-	int mouvment(hero evan,SDL_Event *event);
-	int collisionPP(SDL_Surface *calque,SDL_Surface *perso,SDL_Rect posperso,SDL_Rect posmap);
+	void scrolling (Personne *p,background *b, int co);
+	// int mouvment(hero evan,SDL_Event *event);
+	int collisionPP(SDL_Surface *calque,SDL_Rect posperso,SDL_Rect posmap);
 	SDL_Color GetPixel(SDL_Surface *surface,int x,int y);
 
 

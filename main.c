@@ -11,6 +11,9 @@
 #include "minimap/minimap.h"
 #include "secondentity/ennemi.h"
 #include "secondentity/bonus.h"
+#include <stdbool.h>
+
+
 
 int main() {
     int choix = runMenu();
@@ -38,8 +41,9 @@ int main() {
         entite en;
         SDL_Rect posp;
         initEnnemi(&enn);
-        //init_entite(&en);
-        int score=0;
+        init_entite(&en);
+        int score=200;
+        int c;
         // arduino
         struct sp_port *port;
         if (open_serial_port("/dev/ttyACM0", &port) != 0) {
@@ -49,8 +53,8 @@ int main() {
 
         
         ThreadParams params;
-        params.p = &p; // Assuming 'p' is initialized somewhere in your code
-        params.port = port; // Assuming 'port' is initialized somewhere in your code
+        params.p = &p; 
+        params.port = port; 
 
         // Create serial thread with params
         pthread_t serial_thread;
@@ -118,20 +122,48 @@ int main() {
                 }
             }
 
-            if (p.move_left  || p.move_right){
-                movePerso(&p);
-            }
-            if (p.up != 0) {
-                saut_Personnage(&p, 630);
+            bool can_move_right = true;
+            bool can_move_left = true;
+
+            // Check if moving right causes a collision
+            if (p.move_right) {
+                posp.x = p.position_x + p.vitesse;
+                posp.y = p.position_y;
+                int collision_right = collisionPP(b.calque_background, posp, b.pos_background2);
+                printf("Checking right collision: position_x = %d, collision = %d\n", posp.x, collision_right);
+                if (collision_right != 0) {
+                    can_move_right = false;
+                }
             }
 
-            //SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
-            afficherBack(b,screen);
-            afficherPerso(&p, screen);
-            MAJMinimap(&p, &minimap, resize, p.directions);
-            blit_minimap(minimap,screen);
+            // Check if moving left causes a collision
+            if (p.move_left) {
+                posp.x = p.position_x - p.vitesse;
+                posp.y = p.position_y;
+                int collision_left = collisionPP(b.calque_background, posp, b.pos_background2);
+                printf("Checking left collision: position_x = %d, collision = %d\n", posp.x, collision_left);
+                if (collision_left != 0) {
+                    can_move_left = false;
+                }
+            }
+
+            if (p.move_left || p.move_right) {
+                movePerso(&p, can_move_right, can_move_left);
+            }
+            if (p.up != 0) {
+                saut_Personnage(&p, b.calque_background, b.pos_background2);
+            }
+
             posp.x=p.position_x;
 	        posp.y=p.position_y;
+
+            afficherBack(b,screen);
+            afficherPerso(&p, screen);
+            scrolling(&p,&b,c);	
+			
+            MAJMinimap(&p, &minimap, resize, p.directions);
+            blit_minimap(minimap,screen,p.niveau);
+
             afficherEnnemi(enn,screen);
             move(&enn);
             moveAI(&enn,posp);
@@ -145,9 +177,10 @@ int main() {
                 posp.x = 0;
                 posp.y = 150;
 
-                if (score == 0)
-                    gameRunning = 0;
+                if (score == 0){
+                    //gameRunning = 0;
                     printf("lost.");
+                }
             }
 
 

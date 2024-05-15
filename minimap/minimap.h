@@ -8,22 +8,21 @@
 
 #include "/home/rg/Desktop/Neo-Guardians/perso/perso.h"
 
-struct minimap
-{
-SDL_Surface* mini_map;
-SDL_Rect pos_minimap;
-SDL_Surface* mini_hero;
-SDL_Rect pos_minihero;
+struct minimap {
+    SDL_Surface* mini_maps[3];
+    SDL_Rect pos_minimap[3];
+    SDL_Surface* mini_hero;
+    SDL_Rect pos_minihero;
 };
 typedef struct minimap minimap;
 
 void init_minimap(minimap* mp);
-void blit_minimap(minimap mp,SDL_Surface *screen);
+void blit_minimap(minimap mp, SDL_Surface *screen, int level);
 void MAJMinimap(Personne *p,minimap *mp, int resize,int way);
 /*void inittime(time *t);
 void updatetime(time *t);
 void displaytime(time *t,char time[],SDL_Surface* screen);*/
-void free_minimap(minimap mp);
+// void free_minimap(minimap mp);
 
 
 

@@ -5,53 +5,38 @@
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
 #include"header.h"
-void scrolling (hero *evan,background *b,int co )
-{
-	
-	switch(evan->mouvment)
-	{
+#include "/home/rg/Desktop/Neo-Guardians/perso/perso.h"
 
-		case 1: 
-			if (co!=1){ 
-			if ((b->pos_background2.x<5500)&&(evan->pos_hero2.x>=800)) 
-                		b->pos_background2.x=b->pos_background2.x+15;
+void scrolling(Personne *p, background *b, int co) {
+    // Forward movement
+    if ((p->position_x > 1800) && (p->niveau == 1)) {
+        b->pos_background2.x = 1920;
+        p->position_x = 0;
+        p->position_y = 420;  // Set y position for second screen
+        p->niveau = 2;
+    } else if ((p->position_x > 1800) && (p->niveau == 2)) {
+        b->pos_background2.x = 3840;
+        p->position_x = 0;
+        p->position_y = 700;  // Set y position for third screen
+        p->niveau = 3;
+    }
 
-			if (((evan->pos_hero2.x<800)||((b->pos_background2.x>=5500))&&(evan->pos_hero2.x<1700)))  
-				evan->pos_hero2.x=evan->pos_hero2.x+10;
-			
-		}
-		break;
-		case 2:
-		if (co!=1){
-			if (b->pos_background2.x>0)
-                		b->pos_background2.x=b->pos_background2.x-15;
-	    		if (((b->pos_background2.x!=0)&&(evan->pos_hero2.x>=150))||((b->pos_background2.x==0)&&(evan->pos_hero2.x=50)))
-				evan->pos_hero2.x=evan->pos_hero2.x-10;
-			   
-			}	
-		break;
-		case 3:
-
-		if (evan->pos_hero2.y>50){
-			if (b->pos_background2.x<5500)
-				evan->pos_hero2.y=evan->pos_hero2.y-20;	
-		}
-                if ((evan->pos_hero2.y>750)&&(b->pos_background2.y>=0))
-                b->pos_background2.y=b->pos_background2.y-5;
-		break;
-		case 4: 
-
-		if ((evan->pos_hero2.y<600)&&(evan->pos_hero2.y!=810)&&(b->pos_background2.y<20))
-                b->pos_background2.y=b->pos_background2.y+5;
-		if ((co!=2)&&(co!=1))
-		evan->pos_hero2.y=evan->pos_hero2.y+10;
-		break;
-                
-		
-	}
-	if ((evan->mouvment!=3)&&(co!=2)&&(co!=1)) 
-		evan->pos_hero2.y=evan->pos_hero2.y+5;
-	
+    // Backward movement
+    if ((p->position_x < 0) && (p->niveau == 2)) {
+        b->pos_background2.x = 0;
+        p->position_x = 1800;
+        p->position_y = 630;  // Set y position for first screen
+        p->niveau = 1;
+    } else if ((p->position_x < 0) && (p->niveau == 3)) {
+        b->pos_background2.x = 1920;
+        p->position_x = 1800;
+        p->position_y = 420;  // Set y position for second screen
+        p->niveau = 2;
+    }
 }
+
+
+
+
 
 

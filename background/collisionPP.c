@@ -16,7 +16,7 @@ SDL_Color GetPixel(SDL_Surface *surface,int x,int y)
 	SDL_GetRGB ( col , surface->format , &color.r , &color.g , &color.b ) ; 
 	return ( color ) ;
 }
-int collisionPP(SDL_Surface *calque,SDL_Surface *perso,SDL_Rect posperso,SDL_Rect posmap)
+int collisionPP(SDL_Surface *calque,SDL_Rect posperso,SDL_Rect posmap)
 {
   SDL_Color col2,col22; 
 

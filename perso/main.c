@@ -6,6 +6,8 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_mixer.h>
 #include <SDL/SDL_ttf.h>
+#include <stdbool.h>
+#include "/home/rg/Desktop/Neo-Guardians/background/header.h"
 
 void init(Personne *p, int numperso){
     p->up = 0;
@@ -18,6 +20,7 @@ void init(Personne *p, int numperso){
     p->pes[0] = IMG_Load("perso/Perso.png");
     p->score = 0;
     p->nb_vie = 3;
+    p->niveau = 1;
 }
 
 void swapCharacter(Personne *p) {
@@ -68,6 +71,7 @@ void initPerso(Personne *p) {
     p->nb_vie = 3;
     p->move_left = 0;
     p->move_right = 0;
+    p->niveau = 1;
 
     // Load images for pes array
     p->pes[0] = IMG_Load("perso/img/jump/jump.png");
@@ -151,43 +155,74 @@ void libererPerso(Personne *p) {
 }
 
 
-void movePerso(Personne *p) {
-    if (p->move_right) {
+void movePerso(Personne *p, bool can_move_right, bool can_move_left) {
+    printf("movePerso: can_move_right = %d, can_move_left = %d\n", can_move_right, can_move_left);
+    if (p->move_right && can_move_right) {
+        printf("Moving right: position_x = %f -> %f\n", p->position_x, p->position_x + p->vitesse);
         p->position_x += p->vitesse;
     }
-    if (p->move_left) {
+    if (p->move_left && can_move_left) {
+        printf("Moving left: position_x = %f -> %f\n", p->position_x, p->position_x - p->vitesse);
         p->position_x -= p->vitesse;
     }
 }
 
+bool isOnGround(SDL_Surface *calque, SDL_Rect posperso, SDL_Rect posmap) {
+    SDL_Color groundColor = GetPixel(calque, posperso.x + posmap.x, posperso.y + posmap.y + 1);
+    return (groundColor.r == 0 && groundColor.g == 0 && groundColor.b == 0); // Assuming ground color is black
+}
 
 
-void saut_Personnage(Personne *p, int ground_level) {
-    const float jump_velocity = 18.0;
+
+
+void saut_Personnage(Personne *p, SDL_Surface *calque, SDL_Rect posmap) {
+    const float jump_velocity = 25.0;
     const float gravity_increment = 1.1;
+
+    // Define ground levels for different levels
+    int ground_level;
+    switch (p->niveau) {
+        case 1:
+            ground_level = 630;
+            break;
+        case 2:
+            ground_level = 420;
+            break;
+        case 3:
+            ground_level = 700;
+            break;
+        default:
+            ground_level = 630; // Default ground level if none specified
+            break;
+    }
 
     if (p->up == 1) {
         p->velocity_y = -jump_velocity;
         p->up = 2;
     }
 
-    if (p->up == 2) {
+    if (p->up == 2 || p->up == 3) {
         p->position_y += p->velocity_y;
         p->velocity_y += gravity_increment;
 
-        if (p->velocity_y >= 0) {
+        if (p->up == 2 && p->velocity_y >= 0) {
             p->up = 3;
         }
-    } else if (p->up == 3) {
-        p->position_y += p->velocity_y;
-        p->velocity_y += gravity_increment;
 
-        if (p->position_y >= ground_level) {
+        SDL_Rect posperso = { p->position_x, p->position_y, 0, 0 }; // Assuming width and height are not needed
+
+        if (isOnGround(calque, posperso, posmap)) {
+            p->position_y = posperso.y; // Adjust position to be exactly on the ground
+            p->up = 0;
+        } else if (p->position_y >= ground_level) {
             p->position_y = ground_level;
             p->up = 0;
         }
     }
 }
+
+
+
 
 #include "perso.h"
 #include <stdio.h>

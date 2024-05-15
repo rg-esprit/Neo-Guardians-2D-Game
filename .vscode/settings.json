@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "sdl_mixer.h": "c",
-        "serial_comm.h": "c"
+        "serial_comm.h": "c",
+        "stdbool.h": "c"
     }
 }
