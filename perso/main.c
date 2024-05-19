@@ -73,7 +73,7 @@ void initPerso(Personne *p) {
     p->move_right = 0;
     p->niveau = 1;
 
-    // Load images for pes array
+    
     p->pes[0] = IMG_Load("perso/img/jump/jump.png");
     p->pes[1] = IMG_Load("perso/img/jump/Ljump.png");
     p->pes[2] = IMG_Load("perso/img/run/Run1.png");
@@ -83,11 +83,11 @@ void initPerso(Personne *p) {
     p->pes[6] = IMG_Load("perso/img/Perso.png");
     p->pes[7] = IMG_Load("perso/img/LPerso.png");
 
-    // Check if any image failed to load
+    
     for (int i = 0; i < 8; i++) { 
         if (p->pes[i] == NULL) {
             fprintf(stderr, "Unable to load image: %s\n", IMG_GetError());
-            // Handle error or exit the function
+            
             return;
         }
     }
@@ -102,22 +102,22 @@ void afficherPerso(Personne *p, SDL_Surface *screen) {
     SDL_Surface *characterImage = NULL;
 
     if (p->up != 0) {
-        // Handle jumping images
+        
         if (p->directions == 0) {
             characterImage = p->pes[0];
         } else {
             characterImage = p->pes[1];
         }
     } else if (p->move_left) {
-        int frameIndex = (p->frame / 30) % 2; // '5' can be adjusted to change animation speed
+        int frameIndex = (p->frame / 30) % 2; 
         if (frameIndex == 0) {
             characterImage = p->pes[5];
         } else {
             characterImage = p->pes[4];
         }
-        p->frame++; // Increment frame count to advance animation
+        p->frame++; 
     } else if (p->move_right) {
-        int frameIndex = (p->frame / 30) % 2; // '5' can be adjusted to change animation speed
+        int frameIndex = (p->frame / 30) % 2; 
         if (frameIndex == 0) {
             characterImage = p->pes[2];
         } else {
@@ -125,7 +125,7 @@ void afficherPerso(Personne *p, SDL_Surface *screen) {
         }
         p->frame++;
     } else {
-        // Handle static images when character is not moving
+        
         if (p->directions == 0) {
             characterImage = p->pes[6];
         } else {
@@ -133,11 +133,11 @@ void afficherPerso(Personne *p, SDL_Surface *screen) {
         }
     }
 
-    // If a valid image is selected, blit it to the screen
+    
     if (characterImage != NULL) {
         SDL_BlitSurface(characterImage, NULL, screen, &posecranimg);
     } else {
-        // Log an error or handle cases where no valid image is found
+        
         fprintf(stderr, "No valid character image found for rendering.\n");
     }
 }
@@ -156,20 +156,20 @@ void libererPerso(Personne *p) {
 
 
 void movePerso(Personne *p, bool can_move_right, bool can_move_left) {
-    printf("movePerso: can_move_right = %d, can_move_left = %d\n", can_move_right, can_move_left);
+    
     if (p->move_right && can_move_right) {
-        printf("Moving right: position_x = %f -> %f\n", p->position_x, p->position_x + p->vitesse);
+        
         p->position_x += p->vitesse;
     }
     if (p->move_left && can_move_left) {
-        printf("Moving left: position_x = %f -> %f\n", p->position_x, p->position_x - p->vitesse);
+        
         p->position_x -= p->vitesse;
     }
 }
 
 bool isOnGround(SDL_Surface *calque, SDL_Rect posperso, SDL_Rect posmap) {
     SDL_Color groundColor = GetPixel(calque, posperso.x + posmap.x, posperso.y + posmap.y + 1);
-    return (groundColor.r == 0 && groundColor.g == 0 && groundColor.b == 0); // Assuming ground color is black
+    return (groundColor.r == 0 && groundColor.g == 0 && groundColor.b == 0); 
 }
 
 
@@ -179,7 +179,7 @@ void saut_Personnage(Personne *p, SDL_Surface *calque, SDL_Rect posmap) {
     const float jump_velocity = 25.0;
     const float gravity_increment = 1.1;
 
-    // Define ground levels for different levels
+    
     int ground_level;
     switch (p->niveau) {
         case 1:
@@ -192,7 +192,7 @@ void saut_Personnage(Personne *p, SDL_Surface *calque, SDL_Rect posmap) {
             ground_level = 700;
             break;
         default:
-            ground_level = 630; // Default ground level if none specified
+            ground_level = 630; 
             break;
     }
 
@@ -209,10 +209,10 @@ void saut_Personnage(Personne *p, SDL_Surface *calque, SDL_Rect posmap) {
             p->up = 3;
         }
 
-        SDL_Rect posperso = { p->position_x, p->position_y, 0, 0 }; // Assuming width and height are not needed
+        SDL_Rect posperso = { p->position_x, p->position_y, 0, 0 }; 
 
         if (isOnGround(calque, posperso, posmap)) {
-            p->position_y = posperso.y; // Adjust position to be exactly on the ground
+            p->position_y = posperso.y;
             p->up = 0;
         } else if (p->position_y >= ground_level) {
             p->position_y = ground_level;

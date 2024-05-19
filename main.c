@@ -130,7 +130,7 @@ int main() {
                 posp.x = p.position_x + p.vitesse;
                 posp.y = p.position_y;
                 int collision_right = collisionPP(b.calque_background, posp, b.pos_background2);
-                printf("Checking right collision: position_x = %d, collision = %d\n", posp.x, collision_right);
+                //printf("Checking right collision: position_x = %d, collision = %d\n", posp.x, collision_right);
                 if (collision_right != 0) {
                     can_move_right = false;
                 }
@@ -141,7 +141,7 @@ int main() {
                 posp.x = p.position_x - p.vitesse;
                 posp.y = p.position_y;
                 int collision_left = collisionPP(b.calque_background, posp, b.pos_background2);
-                printf("Checking left collision: position_x = %d, collision = %d\n", posp.x, collision_left);
+                //printf("Checking left collision: position_x = %d, collision = %d\n", posp.x, collision_left);
                 if (collision_left != 0) {
                     can_move_left = false;
                 }
